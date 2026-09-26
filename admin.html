@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель педагога - Нейрокоины</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #025FEB 0%, #00C3FA 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 30px 80px rgba(2, 95, 235, 0.2);
+        }
+        h1 {
+            color: #025FEB;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-primary {
+            background: #025FEB;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1a47b8;
+        }
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #ee5a24;
+        }
+        .btn-success {
+            background: #00b894;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #00a381;
+        }
+        .btn-secondary {
+            background: #dfe6e9;
+            color: #2d3436;
+        }
+        .btn-secondary:hover {
+            background: #b2bec3;
+        }
+        .btn-warning {
+            background: #fdcb6e;
+            color: #2d3436;
+        }
+        .btn-warning:hover {
+            background: #f9a825;
+        }
+        .btn-home {
+            background: #025FEB;
+            color: white;
+        }
+        .btn-home:hover {
+            background: #1a47b8;
+        }
+        .error-message {
+            background: #ffe0e0;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .student-list {
+            margin-top: 20px;
+        }
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-bottom: 1px solid #dfe6e9;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: #f8faff;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        .student-item:hover {
+            background: #eef2ff;
+        }
+        .student-actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        .student-actions .btn {
+            padding: 5px 12px;
+            font-size: 13px;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        .login-form .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .login-form h2 {
+            color: #025FEB;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 15px;
+            }
+            .student-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .student-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Форма входа -->
+    <div id="loginForm">
+        <div class="login-form">
+            <img src="https://i.postimg.cc/prP9Rczb/Chat-GPT-Image-31-iul-2025-g-15-52-38.png" alt="Логотип" class="logo">
+            <h2>👩‍🏫 Вход для педагога</h2>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="passwordInput" placeholder="Введите пароль" onkeypress="if(event.key==='Enter') login()">
+            </div>
+            <button class="btn btn-primary" onclick="login()" style="width:100%;">Войти</button>
+        </div>
+    </div>
+
+    <!-- Основной интерфейс -->
+    <div id="mainContent" style="display:none;">
+        <div class="container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+                <h1>👩‍🏫 Панель педагога</h1>
+                <div class="header-actions">
+                    <a href="index.html" class="btn btn-home">🏠 На главную</a>
+                    <button class="btn btn-secondary" onclick="logout()">🚪 Выйти</button>
+                </div>
+            </div>
+
+            <div id="statusMessage"></div>
+
+            <div style="background:#f8faff;padding:20px;border-radius:15px;margin-bottom:20px;">
+                <h3>➕ Добавить ученика</h3>
+                <form id="studentForm" onsubmit="addStudent(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Имя ученика *</label>
+                            <input type="text" id="studentName" required placeholder="Иван Петров">
+                        </div>
+                        <div class="form-group">
+                            <label>Группа *</label>
+                            <input type="text" id="studentGroup" required placeholder="Группа А">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Начальные монеты</label>
+                            <input type="number" id="studentCoins" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Комментарий</label>
+                            <input type="text" id="studentComment" placeholder="За что начислены">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">➕ Добавить ученика</button>
+                </form>
+            </div>
+
+            <div style="background:#f8faff;padding:20px;border-radius:15px;">
+                <h3>👨‍🎓 Список учеников</h3>
+                <div id="studentsList">
+                    <p>Загрузка...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ============================================
+        // 🔑 ВАШИ КЛЮЧИ
+        // ============================================
+        const MY_SUPABASE_URL = 'https://hbbpkfqlgwruklzanmwv.supabase.co';
+        const MY_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiYnBrZnFsZ3dydWtsemFubXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NDYxODYsImV4cCI6MjEwNDEyMjE4Nn0.1B8WzdGP6tAdWJxp0pYEgxBsmLXIeEXBgJ7BLWfm-ag';
+        // ============================================
+
+        // 🔑 СМЕНИТЕ ПАРОЛЬ ЗДЕСЬ!
+        const ADMIN_PASSWORD = '123456';
+        // ============================================
+
+        let students = [];
+        let groups = [];
+        const sb = supabase.createClient(MY_SUPABASE_URL, MY_SUPABASE_KEY);
+
+        checkConnection();
+
+        async function checkConnection() {
+            try {
+                const { data, error } = await sb.from('students').select('*').limit(1);
+                if (error) {
+                    showError('Ошибка подключения: ' + error.message);
+                    return;
+                }
+                checkAuth();
+            } catch (e) {
+                showError('❌ Ошибка: ' + e.message);
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('statusMessage');
+            el.innerHTML = `<div class="error-message">❌ ${msg}</div>`;
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('statusMessage');
+            el.innerHTML = `<div class="success-message">✅ ${msg}</div>`;
+        }
+
+        function checkAuth() {
+            const saved = localStorage.getItem('teacherAuth');
+            if (saved === 'true') {
+                showMainContent();
+            } else {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('mainContent').style.display = 'none';
+            }
+        }
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('teacherAuth', 'true');
+                showMainContent();
+            } else {
+                alert('❌ Неверный пароль!');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('teacherAuth');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        async function showMainContent() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            await loadData();
+        }
+
+        async function loadData() {
+            try {
+                const [studentsRes, groupsRes] = await Promise.all([
+                    sb.from('students').select('*').order('coins', { ascending: false }),
+                    sb.from('groups').select('*').order('name')
+                ]);
+
+                if (studentsRes.error) throw studentsRes.error;
+                if (groupsRes.error) throw groupsRes.error;
+
+                students = studentsRes.data || [];
+                groups = groupsRes.data || [];
+
+                renderStudents();
+
+            } catch (error) {
+                showError('Ошибка загрузки: ' + error.message);
+            }
+        }
+
+        // Функция для автоматического добавления группы
+        async function ensureGroupExists(groupName) {
+            const { data: existing, error } = await sb
+                .from('groups')
+                .select('id')
+                .eq('name', groupName)
+                .maybeSingle();
+
+            if (error) {
+                console.error('Ошибка проверки группы:', error);
+                return false;
+            }
+
+            if (!existing) {
+                const { error: insertError } = await sb
+                    .from('groups')
+                    .insert([{ name: groupName }]);
+
+                if (insertError) {
+                    console.error('Ошибка создания группы:', insertError);
+                    return false;
+                }
+                
+                const { data: newGroups } = await sb
+                    .from('groups')
+                    .select('*')
+                    .order('name');
+                    
+                if (newGroups) {
+                    groups = newGroups;
+                }
+                
+                return true;
+            }
+            
+            return true;
+        }
+
+        async function addStudent(event) {
+            event.preventDefault();
+            const name = document.getElementById('studentName').value.trim();
+            const group = document.getElementById('studentGroup').value.trim();
+            const coins = parseInt(document.getElementById('studentCoins').value) || 0;
+            const comment = document.getElementById('studentComment').value.trim() || 'Первое начисление';
+
+            if (!name || !group) {
+                alert('❌ Заполните имя и группу!');
+                return;
+            }
+
+            try {
+                await ensureGroupExists(group);
+
+                const newStudent = {
+                    name: name,
+                    group_name: group,
+                    coins: coins,
+                    history: [{ amount: coins, comment: comment, date: new Date().toLocaleDateString('ru-RU') }]
+                };
+
+                const { data, error } = await sb
+                    .from('students')
+                    .insert([newStudent])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                students.push(data);
+                document.getElementById('studentForm').reset();
+                document.getElementById('studentCoins').value = 0;
+
+                renderStudents();
+                showSuccess(`✅ Ученик "${name}" добавлен!`);
+
+            } catch (error) {
+                showError('Ошибка добавления: ' + error.message);
+                alert('❌ Ошибка добавления ученика');
+            }
+        }
+
+        // Редактирование имени ученика
+        async function editStudentName(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const newName = prompt('Введите новое имя ученика:', student.name);
+            if (newName === null) return;
+            
+            const trimmedName = newName.trim();
+            if (!trimmedName) {
+                alert('❌ Имя не может быть пустым!');
+                return;
+            }
+
+            try {
+                const { error } = await sb
+                    .from('students')
+                    .update({ name: trimmedName })
+                    .eq('id', studentId);
+
+                if (error) throw error;
+
+                student.name = trimmedName;
+                renderStudents();
+                showSuccess(`✅ Имя изменено на "${trimmedName}"`);
+
+            } catch (error) {
+                showError('Ошибка редактирования: ' + error.message);
+                alert('❌ Ошибка изменения имени');
+            }
+        }
+
+        async function addCoins(studentId) {
+            const amount = prompt('Сколько нейрокоинов начислить?');
+            if (amount === null) return;
+            const numAmount = parseInt(amount);
+            if (isNaN(numAmount) || numAmount <= 0) {
+                alert('❌ Введите положительное число!');
+                return;
+            }
+
+            const comment = prompt('За что начисляем?') || 'Начисление';
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            try {
+                const newCoins = student.coins + numAmount;
+                const history = student.history || [];
+                history.push({ amount: numAmount, comment: comment, date: new Date().toLocaleDateString('ru-RU') });
+
+                const { error } = await sb
+                    .from('students')
+                    .update({ coins: newCoins, history: history })
+                    .eq('id', studentId);
+
+                if (error) throw error;
+
+                student.coins = newCoins;
+                student.history = history;
+                renderStudents();
+                alert(`✅ Начислено ${numAmount} нейрокоинов`);
+
+            } catch (error) {
+                showError('Ошибка начисления: ' + error.message);
+            }
+        }
+
+        async function subtractCoins(studentId) {
+            const amount = prompt('Сколько нейрокоинов списать?');
+            if (amount === null) return;
+            const numAmount = parseInt(amount);
+            if (isNaN(numAmount) || numAmount <= 0) {
+                alert('❌ Введите положительное число!');
+                return;
+            }
+
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            if (student.coins < numAmount) {
+                alert('❌ Недостаточно нейрокоинов!');
+                return;
+            }
+
+            const comment = prompt('Причина списания?') || 'Списание';
+
+            try {
+                const newCoins = student.coins - numAmount;
+                const history = student.history || [];
+                history.push({ amount: -numAmount, comment: comment, date: new Date().toLocaleDateString('ru-RU') });
+
+                const { error } = await sb
+                    .from('students')
+                    .update({ coins: newCoins, history: history })
+                    .eq('id', studentId);
+
+                if (error) throw error;
+
+                student.coins = newCoins;
+                student.history = history;
+                renderStudents();
+                alert(`✅ Списано ${numAmount} нейрокоинов`);
+
+            } catch (error) {
+                showError('Ошибка списания: ' + error.message);
+            }
+        }
+
+        async function deleteStudent(studentId) {
+            if (!confirm('Вы уверены, что хотите удалить ученика?')) return;
+
+            const student = students.find(s => s.id === studentId);
+            try {
+                const { error } = await sb
+                    .from('students')
+                    .delete()
+                    .eq('id', studentId);
+
+                if (error) throw error;
+
+                students = students.filter(s => s.id !== studentId);
+                renderStudents();
+                alert(`❌ Ученик удален`);
+
+            } catch (error) {
+                showError('Ошибка удаления: ' + error.message);
+            }
+        }
+
+        function renderStudents() {
+            const container = document.getElementById('studentsList');
+
+            if (students.length === 0) {
+                container.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">Нет учеников</p>';
+                return;
+            }
+
+            const sorted = [...students].sort((a, b) => b.coins - a.coins);
+            let html = '<div class="student-list">';
+            sorted.forEach((s, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`;
+                html += `
+                    <div class="student-item">
+                        <div>
+                            <span style="font-weight:700;color:#025FEB;min-width:30px;display:inline-block;">${medal}</span>
+                            <strong>${s.name}</strong>
+                            <span style="color:#999;font-size:0.9em;margin:0 10px;">${s.group_name}</span>
+                            <span style="color:#00b894;font-weight:700;">${s.coins}</span>
+                        </div>
+                        <div class="student-actions">
+                            <button class="btn btn-warning" onclick="editStudentName(${s.id})" title="Редактировать имя">✏️</button>
+                            <button class="btn btn-success" onclick="addCoins(${s.id})" title="Начислить монеты">➕</button>
+                            <button class="btn btn-danger" onclick="subtractCoins(${s.id})" title="Списать монеты">➖</button>
+                            <button class="btn btn-secondary" onclick="showHistory(${s.id})" title="История">📜</button>
+                            <button class="btn btn-danger" onclick="deleteStudent(${s.id})" title="Удалить">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function showHistory(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            let msg = `📊 История ${student.name}\n`;
+            msg += `Всего монет: ${student.coins}\n`;
+            msg += '━'.repeat(30) + '\n';
+
+            if (student.history && student.history.length > 0) {
+                const sorted = [...student.history].reverse();
+                sorted.forEach(item => {
+                    const sign = item.amount > 0 ? '+' : '';
+                    msg += `${item.date} ${sign}${item.amount} - ${item.comment}\n`;
+                });
+            } else {
+                msg += 'История пуста';
+            }
+
+            alert(msg);
+        }
+    </script>
+</body>
+</html>
